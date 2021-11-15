@@ -18,7 +18,10 @@ It's otherwise exactly the same as the
 [localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
 
 ```js
+import miniforage from '@immutabl3/mini-forage';
+
 await miniforage.setItem('key', 'value');
+
 const result = await miniforage.getItem('key');
 // result === 'value'
 ```
@@ -58,4 +61,4 @@ As of version `1.0.0` the payload added to your app is rather small. Served usin
 
 # License
 
-[MIT](https://github.com/immutabl3/mini-forage/blob/master/LICENSE).
+[MIT](https://github.com/immutabl3/mini-forage/blob/master/LICENSE)å
