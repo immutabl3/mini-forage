@@ -1,4 +1,4 @@
-import idbDriver from './indexeddb';
+import idbDriver from './indexeddb.js';
 
 const READY = Symbol('ready');
 

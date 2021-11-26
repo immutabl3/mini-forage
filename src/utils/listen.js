@@ -1,4 +1,4 @@
-import noop from './noop';
+import { noop } from '@immutabl3/utils';
 
 const unregister = (transaction, req) => {
   req.onsuccess = transaction.oncomplete = req.onerror = transaction.onabort = transaction.onerror = noop;

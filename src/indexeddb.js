@@ -1,6 +1,6 @@
-import idb from './utils/idb';
-import normalizeKey from './utils/normalizeKey';
-import listen from './utils/listen';
+import idb from './utils/idb.js';
+import normalizeKey from './utils/normalizeKey.js';
+import listen from './utils/listen.js';
 
 const READ_ONLY = 'readonly';
 const READ_WRITE = 'readwrite';
