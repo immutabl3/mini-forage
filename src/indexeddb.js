@@ -56,8 +56,8 @@ export default {
         if (!cursor) return resolve();
         
         const result = iterator(
-          cursor.value,
           cursor.key,
+          cursor.value,
           iteration++
         );
 
