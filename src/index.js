@@ -1,11 +1,15 @@
+import deferred from './utils/deferred.js';
 import idbDriver from './indexeddb.js';
 
-
 export const MiniForage = function(options = {}) {
+  let requesting;
   let ready = false;
+
   return {
     memory: new Map(),
+
     dbInfo: {},
+
     config: {
       description: '',
       driver: 'indexeddb',
@@ -18,14 +22,26 @@ export const MiniForage = function(options = {}) {
       ...options
     },
 
-
     async ready() {
       if (ready === true) return true;
+      if (requesting) return requesting;
+
+      const {
+        resolve,
+        promise,
+      } = deferred();
+
+      requesting = promise;
 
       this.dbInfo = await idbDriver.initStorage(this.config);
       
       Object.assign(this, idbDriver);
 
+      ready = true;
+      resolve();
+      requesting = undefined;
+
+      return ready;
     },
 
     // add a stub for each driver API method that delays the call to the
