@@ -4,6 +4,7 @@ import idbDriver from './indexeddb.js';
 export const MiniForage = function(options = {}) {
   let ready = false;
   return {
+    memory: new Map(),
     dbInfo: {},
     config: {
       description: '',
