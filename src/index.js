@@ -37,6 +37,10 @@ export const MiniForage = function(options = {}) {
       
       Object.assign(this, idbDriver);
 
+      await this.iterate((key, value) => {
+        this.memory.set(key, value);
+      });
+
       ready = true;
       resolve();
       requesting = undefined;
