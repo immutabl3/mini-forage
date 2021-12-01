@@ -42,8 +42,6 @@ export default {
   },
   
   async iterate(iterator) {
-    this.ready();
-
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
     const store = transaction.objectStore(this.dbInfo.storeName);
 
@@ -75,7 +73,6 @@ export default {
   },
   
   async getItem(rawKey) {
-    await this.ready();
 
     const key = normalizeKey(rawKey);
 
@@ -99,7 +96,6 @@ export default {
   },
   
   async setItem(rawKey, value) {
-    await this.ready();
 
     const key = normalizeKey(rawKey);   
     const transaction = await createTransaction(this.dbInfo, READ_WRITE);
@@ -108,7 +104,6 @@ export default {
   },
 
   async removeItem(rawKey) {
-    await this.ready();
 
     const key = normalizeKey(rawKey);
     const transaction = await createTransaction(this.dbInfo, READ_WRITE);
@@ -117,7 +112,6 @@ export default {
   },
   
   async clear() {
-    await this.ready();
 
     const transaction = await createTransaction(self.dbInfo, READ_WRITE);
     const store = transaction.objectStore(this.dbInfo.storeName);
@@ -125,7 +119,6 @@ export default {
   },
 
   async length() {
-    await this.ready();
 
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
     const store = transaction.objectStore(this.dbInfo.storeName);
@@ -133,7 +126,6 @@ export default {
   },
 
   async has(rawKey) {
-    await this.ready();
     
     const key = normalizeKey(rawKey);
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
@@ -154,7 +146,6 @@ export default {
   async key(n) {
     if (n < 0) return;
 
-    await this.ready();
 
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
     const store = transaction.objectStore(this.dbInfo.storeName);
@@ -189,7 +180,6 @@ export default {
   },
 
   async keys() {
-    await this.ready();
 
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
     const store = transaction.objectStore(this.dbInfo.storeName);
