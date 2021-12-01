@@ -25,7 +25,6 @@ export const MiniForage = function(options = {}) {
       
       Object.assign(this, idbDriver);
 
-      return (this[READY] = true);
     },
 
     // add a stub for each driver API method that delays the call to the
