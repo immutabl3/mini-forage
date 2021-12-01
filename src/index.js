@@ -17,7 +17,6 @@ export const MiniForage = function(options = {}) {
       ...options
     },
 
-    [READY]: false,
 
     async ready() {
       if (ready === true) return true;
