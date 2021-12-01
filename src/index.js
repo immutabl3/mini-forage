@@ -12,7 +12,7 @@ export const MiniForage = function(options = {}) {
       // Default DB size is _JUST UNDER_ 5MB, as it's the highest size
       // we can use without a prompt.
       size: 4980736,
-      storeName: 'keyvaluepairs',
+      storeName: 'keyvaluestore',
       version: 1,
       ...options
     },
