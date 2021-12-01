@@ -1,8 +1,8 @@
 import idbDriver from './indexeddb.js';
 
-const READY = Symbol('ready');
 
 export const MiniForage = function(options = {}) {
+  let ready = false;
   return {
     dbInfo: {},
     config: {
@@ -20,7 +20,7 @@ export const MiniForage = function(options = {}) {
     [READY]: false,
 
     async ready() {
-      if (this[READY] === true) return true;
+      if (ready === true) return true;
 
       this.dbInfo = await idbDriver.initStorage(this.config);
       
