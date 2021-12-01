@@ -1,3 +1,4 @@
+import { defer } from '@immutabl3/utils';
 import idb from './utils/idb.js';
 import normalizeKey from './utils/normalizeKey.js';
 import listen from './utils/listen.js';
@@ -71,81 +72,57 @@ export default {
       };
     });
   },
-  
+    
   async getItem(rawKey) {
-
     const key = normalizeKey(rawKey);
-
-    const transaction = await createTransaction(this.dbInfo, READ_ONLY);
-    return new Promise((resolve, reject) => {
-      const store = transaction.objectStore(this.dbInfo.storeName);
-      const req = store.get(key);
-
-      req.onsuccess = function() {
-        resolve(
-          req.result === undefined
-            ? null
-            : req.result
-        );
-      };
-
-      req.onerror = function() {
-        reject(req.error);
-      };
-    });
+    return this.memory.get(key);
   },
   
   async setItem(rawKey, value) {
-
     const key = normalizeKey(rawKey);   
-    const transaction = await createTransaction(this.dbInfo, READ_WRITE);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    return listen(transaction, () => store.put(value, key));
+    this.memory.set(key, value);
+    
+    defer(async () => {
+      const transaction = await createTransaction(this.dbInfo, READ_WRITE);
+      const store = transaction.objectStore(this.dbInfo.storeName);
+      listen(transaction, () => store.put(value, key));
+    });
+
+    return value;
   },
 
   async removeItem(rawKey) {
-
     const key = normalizeKey(rawKey);
-    const transaction = await createTransaction(this.dbInfo, READ_WRITE);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    return listen(transaction, () => store.delete(key));
+    this.memory.delete(key);
+
+    defer(async () => {
+      const transaction = await createTransaction(this.dbInfo, READ_WRITE);
+      const store = transaction.objectStore(this.dbInfo.storeName);
+      listen(transaction, () => store.delete(key));
+    });
   },
   
   async clear() {
+    this.memory.clear();
 
-    const transaction = await createTransaction(self.dbInfo, READ_WRITE);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    return listen(transaction, () => store.clear());
+    defer(async () => {
+      const transaction = await createTransaction(self.dbInfo, READ_WRITE);
+      const store = transaction.objectStore(this.dbInfo.storeName);
+      listen(transaction, () => store.clear());
+    });
   },
 
   async length() {
-
-    const transaction = await createTransaction(this.dbInfo, READ_ONLY);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    return listen(transaction, () => store.count());
+    return this.memory.size;
   },
 
-  async has(rawKey) {
-    
+  async has(rawKey) {    
     const key = normalizeKey(rawKey);
-    const transaction = await createTransaction(this.dbInfo, READ_ONLY);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    
-    return new Promise((resolve, reject) => {
-      const req = store.openCursor(key);
-
-      req.onsuccess = function(e) {
-        const cursor = e?.target?.result;
-        resolve(!!cursor);
-      };
-
-      req.onerror = () => reject(req.error);
-    });
+    return this.memory.has(key);
   },
 
   async key(n) {
     if (n < 0) return;
-
 
     const transaction = await createTransaction(this.dbInfo, READ_ONLY);
     const store = transaction.objectStore(this.dbInfo.storeName);
@@ -180,9 +157,6 @@ export default {
   },
 
   async keys() {
-
-    const transaction = await createTransaction(this.dbInfo, READ_ONLY);
-    const store = transaction.objectStore(this.dbInfo.storeName);
-    return listen(transaction, () => store.getAllKeys());
+    return Array.from(this.memory.keys());
   },
 };
